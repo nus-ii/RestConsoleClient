@@ -14,5 +14,6 @@ namespace RCClib
 		public string Id;
 		public string ReplaceValue;
 		public string ReplaceFlag;
+		public string Pattern;
 	}
 }
