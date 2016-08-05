@@ -28,6 +28,7 @@ namespace RestConsoleClient
 			foreach (var l in result)
 			{
 				Console.WriteLine(l);
+				var t = JObject.Parse(l);
 			}
 		}
 
