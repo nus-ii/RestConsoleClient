@@ -16,18 +16,33 @@ namespace RestConsoleClient
 	{
 		static void Main(string[] args)
 		{
+
 			Settings settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(@"C:\ClientImport\SettingsRCCclient.json"));
 			var result=RESTprocess(settings);
-			PrintConsole(result);
+			List<string> log=new List<string>();
+			PrintConsole(result,ref log);
+			WriteLog(log,settings);
 			Console.ReadLine();
-			
 		}
 
-		private static void PrintConsole(List<RestTask> result)
+		private static void WriteLog(List<string> log, Settings settings)
+		{
+			string result = "";
+
+			foreach (var l in log)
+			{
+				result = result + l + "\r\n";
+			}
+
+			File.WriteAllText(settings.LogFile,result);
+		}
+
+		private static void PrintConsole(List<RestTask> result, ref List<string> log)
 		{
 			foreach (var l in result)
 			{
 				Console.WriteLine(l.responceTask.Result);
+				log.Add(l.responceTask.Result);
 			}
 		}
 
@@ -37,17 +52,14 @@ namespace RestConsoleClient
 			string data = File.ReadAllText(settings.DataFile);
 			JArray dataJArray = JObject.Parse(data)["result"] as JArray;
 			JObject pattern=JObject.Parse(File.ReadAllText(settings.Pattern));
+
 			foreach (var target in dataJArray)
 			{
 				var temp = SetToPattern((JObject)target,pattern);
 				var resp = RESTadapter.GetData(temp.ToString(), settings.Id, settings.Portal, settings.Product);
 			    result.Add(new RestTask(temp,resp));
 			}
-			//if (!string.IsNullOrEmpty(settings.ReplaceFlag))
-			//{
-			//	data = data.Replace(settings.ReplaceFlag, settings.ReplaceValue);
-			//}
-			//RESTadapter.GetData(data, settings.Id, settings.Portal, settings.Product).Result;
+
 			return result;
 		}
 
