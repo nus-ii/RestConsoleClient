@@ -23,26 +23,25 @@ namespace RestConsoleClient
 			
 		}
 
-		private static void PrintConsole(List<string> result)
+		private static void PrintConsole(List<RestTask> result)
 		{
 			foreach (var l in result)
 			{
-				Console.WriteLine(l);
-				var t = JObject.Parse(l);
+				Console.WriteLine(l.responceTask.Result);
 			}
 		}
 
-		private static List<string> RESTprocess(Settings settings)
+		private static List<RestTask> RESTprocess(Settings settings)
 		{
-			List<string> result=new List<string>();
+			List<RestTask> result=new List<RestTask>();
 			string data = File.ReadAllText(settings.DataFile);
 			JArray dataJArray = JObject.Parse(data)["result"] as JArray;
 			JObject pattern=JObject.Parse(File.ReadAllText(settings.Pattern));
 			foreach (var target in dataJArray)
 			{
 				var temp = SetToPattern((JObject)target,pattern);
-				string resp = RESTadapter.GetData(temp.ToString(), settings.Id, settings.Portal, settings.Product).Result;
-			    result.Add(resp);
+				var resp = RESTadapter.GetData(temp.ToString(), settings.Id, settings.Portal, settings.Product);
+			    result.Add(new RestTask(temp,resp));
 			}
 			//if (!string.IsNullOrEmpty(settings.ReplaceFlag))
 			//{
