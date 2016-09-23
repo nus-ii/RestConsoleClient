@@ -15,11 +15,14 @@ namespace RCClib
 			Uri mPortalUrl = new Uri(a);
 			Uri url = new Uri(string.Concat(a, b));
 			var cookieContainer = new CookieContainer();
-			var cookie = new Cookie("PHPSESSID", session);
-			cookieContainer.Add(mPortalUrl, cookie);
+			//cookieContainer.MaxCookieSize = 11115;
+			var cookie = new Cookie("PHPSESSID", session,"",mPortalUrl.ToString());//,"",mPortalUrl.ToString());
+			cookieContainer.Add(cookie);
+			//cookieContainer.Add(new Cookie("PHPSESSID", session));
 			using (HttpClient client = new HttpClient(new HttpClientHandler() { CookieContainer = cookieContainer }))
 			{
 				client.BaseAddress = mPortalUrl;
+			
 				var response = await client.PostAsync(url, new StringContent(body, Encoding.UTF8, "application/json"));
 				response.EnsureSuccessStatusCode();
 				var result = await response.Content.ReadAsStringAsync();

@@ -17,7 +17,7 @@ namespace RestConsoleClient
 		static void Main(string[] args)
 		{
 
-			Settings settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(@"C:\ClientImport\SettingsRCCclient.json"));
+			Settings settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(@"C:\HardPrint\SettingsRCCclient.json"));
 			var result=RESTprocess(settings);
 			List<string> log=new List<string>();
 			PrintConsole(result,ref log);
@@ -55,7 +55,9 @@ namespace RestConsoleClient
 
 			foreach (var target in dataJArray)
 			{
-				var temp = SetToPattern((JObject)target,pattern);
+				//var temp = SetToPattern((JObject)target,pattern);
+				//TODO:
+				var temp = pattern;
 				var resp = RESTadapter.GetData(temp.ToString(), settings.Id, settings.Portal, settings.Product);
 			    result.Add(new RestTask(temp,resp));
 			}
