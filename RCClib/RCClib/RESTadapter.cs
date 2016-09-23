@@ -15,8 +15,9 @@ namespace RCClib
 			Uri mPortalUrl = new Uri(a);
 			Uri url = new Uri(string.Concat(a, b));
 			var cookieContainer = new CookieContainer();
-			var cookie = new Cookie("PHPSESSID", session);
+			var cookie = new Cookie("SSID", session);
 			cookieContainer.Add(mPortalUrl, cookie);
+			cookieContainer.Add(mPortalUrl, new Cookie("PHPSESSID", session));
 			using (HttpClient client = new HttpClient(new HttpClientHandler() { CookieContainer = cookieContainer }))
 			{
 				client.BaseAddress = mPortalUrl;
